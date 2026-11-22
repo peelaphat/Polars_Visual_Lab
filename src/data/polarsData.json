@@ -1,0 +1,612 @@
+[
+  {
+    "id": "df-filter",
+    "name": "df.filter()",
+    "type": "Method",
+    "category": "การกรองข้อมูล",
+    "keywords": ["filter", "กรอง", "เงื่อนไข", "where", "คัดเลือกแถว", "คะแนน"],
+    "summary": "ใช้คัดเลือกเฉพาะ \"แถว\" ที่ตรงตามเงื่อนไขที่เรากำหนด เหมือนการคัดชื่อนักเรียนที่สอบผ่านเกณฑ์ออกจากตารางใหญ่",
+    "signature": "df.filter(*predicates, **constraints) -> DataFrame",
+    "parameters": [
+      {
+        "name": "*predicates",
+        "desc": "เงื่อนไขที่ใช้กรอง เช่น pl.col(\"score\") >= 80 (ใส่ได้หลายเงื่อนไขคั่นด้วยเครื่องหมายจุลภาค)"
+      },
+      {
+        "name": "**constraints",
+        "desc": "เงื่อนไขแบบระบุชื่อคอลัมน์ตรงๆ เช่น room=\"5/1\""
+      }
+    ],
+    "code": "import polars as pl\n\n# กรองเฉพาะนักเรียนที่ได้คะแนนตั้งแต่ 80 ขึ้นไป\npassed_df = df.filter(pl.col(\"score\") >= 80)",
+    "animationType": "filter_rows",
+    "datasetTitle": "ตารางคะแนนสอบวิชาวิทยาการคำนวณ (ม.5/1)",
+    "mascotTipTh": "ลองกดปุ่ม 'รันคำสั่ง' ดูสิ เดี๋ยวตารางจะคัดเฉพาะคนได้คะแนน 80 ขึ้นไปให้ดูนะ",
+    "columns": ["name", "room", "score"],
+    "initialRows": [
+      { "id": "r1", "name": "ต้นกล้า", "room": "5/1", "score": 85 },
+      { "id": "r2", "name": "น้ำใส", "room": "5/1", "score": 62 },
+      { "id": "r3", "name": "ภูผา", "room": "5/1", "score": 91 },
+      { "id": "r4", "name": "ข้าวหอม", "room": "5/1", "score": 74 },
+      { "id": "r5", "name": "ปันปัน", "room": "5/1", "score": 80 }
+    ],
+    "resultRows": [
+      { "id": "r1", "name": "ต้นกล้า", "room": "5/1", "score": 85 },
+      { "id": "r3", "name": "ภูผา", "room": "5/1", "score": 91 },
+      { "id": "r5", "name": "ปันปัน", "room": "5/1", "score": 80 }
+    ]
+  },
+  {
+    "id": "df-drop-nulls",
+    "name": "df.drop_nulls()",
+    "type": "Method",
+    "category": "จัดการค่าว่าง",
+    "keywords": ["drop_nulls", "null", "ค่าว่าง", "ลบ", "ทำความสะอาดข้อมูล", "missing"],
+    "summary": "ใช้ลบ \"แถว\" ที่มีค่าว่าง (null) ออกจากตาราง ช่วยทำความสะอาดข้อมูลก่อนนำไปคำนวณ เพื่อไม่ให้ผลลัพธ์ผิดพลาด",
+    "signature": "df.drop_nulls(subset=None) -> DataFrame",
+    "parameters": [
+      {
+        "name": "subset",
+        "desc": "ระบุชื่อคอลัมน์ที่ต้องการเช็กค่าว่าง (ถ้าไม่ใส่ จะเช็กทุกคอลัมน์ในตาราง)"
+      }
+    ],
+    "code": "import polars as pl\n\n# ลบแถวที่มีค่าว่างในคอลัมน์ price ออก\nclean_df = df.drop_nulls(subset=[\"price\"])",
+    "animationType": "drop_nulls",
+    "datasetTitle": "เมนูร้านชานมไข่มุกหน้าโรงเรียน",
+    "mascotTipTh": "สังเกตแถวที่มีคำว่า null สีแดงไว้นะ กด 'รันคำสั่ง' แล้วดูว่าแถวไหนหายไปบ้าง",
+    "columns": ["menu", "size", "price"],
+    "initialRows": [
+      { "id": "m1", "menu": "ชานมไต้หวัน", "size": "M", "price": 35 },
+      { "id": "m2", "menu": "ชาเขียวมัทฉะ", "size": "L", "price": null },
+      { "id": "m3", "menu": "โกโก้เย็น", "size": "M", "price": 40 },
+      { "id": "m4", "menu": "นมสดบราวน์ชูการ์", "size": "L", "price": null },
+      { "id": "m5", "menu": "ชาไทยไข่มุก", "size": "M", "price": 35 }
+    ],
+    "resultRows": [
+      { "id": "m1", "menu": "ชานมไต้หวัน", "size": "M", "price": 35 },
+      { "id": "m3", "menu": "โกโก้เย็น", "size": "M", "price": 40 },
+      { "id": "m5", "menu": "ชาไทยไข่มุก", "size": "M", "price": 35 }
+    ]
+  },
+  {
+    "id": "pl-col",
+    "name": "pl.col()",
+    "type": "Expression",
+    "category": "เลือกคอลัมน์",
+    "keywords": ["col", "column", "คอลัมน์", "เลือก", "expression", "select"],
+    "summary": "ใช้ \"ชี้เป้า\" ไปยังคอลัมน์ที่ต้องการใน DataFrame เพื่อนำไปคำนวณ เปรียบเทียบ หรือเลือกมาแสดงผล เป็นหัวใจสำคัญของ Polars",
+    "signature": "pl.col(*names) -> Expr",
+    "parameters": [
+      {
+        "name": "*names",
+        "desc": "ชื่อคอลัมน์ 1 ชื่อ หรือหลายชื่อ เช่น pl.col(\"score\") หรือ pl.col(\"name\", \"score\")"
+      }
+    ],
+    "code": "import polars as pl\n\n# ชี้เป้าไปที่คอลัมน์ score เพื่อนำมาแสดงผล\nselected_df = df.select(pl.col(\"score\"))",
+    "animationType": "select_col",
+    "highlightCol": "score",
+    "datasetTitle": "ตารางคะแนนสอบวิชาวิทยาการคำนวณ (ม.5/1)",
+    "mascotTipTh": "pl.col() ใช้บ่อยมากใน Polars ลองกด 'รันคำสั่ง' ดูการชี้เป้าคอลัมน์ score สิ",
+    "columns": ["name", "room", "score"],
+    "initialRows": [
+      { "id": "c1", "name": "ต้นกล้า", "room": "5/1", "score": 85 },
+      { "id": "c2", "name": "น้ำใส", "room": "5/1", "score": 62 },
+      { "id": "c3", "name": "ภูผา", "room": "5/1", "score": 91 }
+    ],
+    "resultRows": [
+      { "id": "c1", "score": 85 },
+      { "id": "c2", "score": 62 },
+      { "id": "c3", "score": 91 }
+    ]
+  },
+  {
+    "id": "pl-read-csv",
+    "name": "pl.read_csv()",
+    "type": "Function",
+    "category": "นำเข้าข้อมูล",
+    "keywords": ["read_csv", "csv", "อ่านไฟล์", "นำเข้า", "load", "import"],
+    "summary": "ใช้อ่านไฟล์ข้อความแบบ CSV เข้ามาสร้างเป็นตาราง DataFrame ใน Polars ได้อย่างรวดเร็ว",
+    "signature": "pl.read_csv(source, *, has_header=True, separator=\",\") -> DataFrame",
+    "parameters": [
+      {
+        "name": "source",
+        "desc": "ที่อยู่หรือชื่อไฟล์ CSV ที่ต้องการอ่าน เช่น \"scores.csv\""
+      },
+      {
+        "name": "has_header",
+        "desc": "บอกว่าแถวแรกของไฟล์เป็นชื่อคอลัมน์หรือไม่ (ค่าเริ่มต้นคือ True)"
+      },
+      {
+        "name": "separator",
+        "desc": "ตัวคั่นระหว่างคอลัมน์ในไฟล์ (ค่าเริ่มต้นคือเครื่องหมายจุลภาค \",\")"
+      }
+    ],
+    "code": "import polars as pl\n\n# อ่านไฟล์คะแนนสอบเข้ามาเป็น DataFrame\ndf = pl.read_csv(\"scores_m5.csv\")",
+    "animationType": "transform_values",
+    "datasetTitle": "นำเข้าไฟล์ scores_m5.csv เป็น DataFrame",
+    "mascotTipTh": "ก้าวแรกของการวิเคราะห์ข้อมูลคือโหลดไฟล์ CSV กด 'รันคำสั่ง' เพื่อดูตารางที่ได้กัน",
+    "columns": ["name", "subject", "score"],
+    "initialRows": [
+      { "id": "rc1", "name": "ต้นกล้า", "subject": "Python", "score": 88 },
+      { "id": "rc2", "name": "น้ำใส", "subject": "Python", "score": 92 }
+    ],
+    "resultRows": [
+      { "id": "rc1", "name": "ต้นกล้า", "subject": "Python", "score": 88 },
+      { "id": "rc2", "name": "น้ำใส", "subject": "Python", "score": 92 }
+    ]
+  },
+  {
+    "id": "df-select",
+    "name": "df.select()",
+    "type": "Method",
+    "category": "เลือกคอลัมน์",
+    "keywords": ["select", "เลือกคอลัมน์", "column", "ตัดคอลัมน์"],
+    "summary": "ใช้เลือกเฉพาะ \"คอลัมน์\" ที่ต้องการใช้งาน หรือสร้างคอลัมน์ใหม่ขึ้นมาแสดงผล โดยไม่ดึงคอลัมน์อื่นมาด้วย",
+    "signature": "df.select(*exprs, **named_exprs) -> DataFrame",
+    "parameters": [
+      {
+        "name": "*exprs",
+        "desc": "ชื่อคอลัมน์หรือ Expression ที่ต้องการเลือก เช่น \"name\", pl.col(\"score\")"
+      },
+      {
+        "name": "**named_exprs",
+        "desc": "ตั้งชื่อคอลัมน์ใหม่พร้อมคำนวณ เช่น double_score=pl.col(\"score\") * 2"
+      }
+    ],
+    "code": "import polars as pl\n\n# เลือกเฉพาะคอลัมน์ menu และ price\nmenu_df = df.select(\"menu\", \"price\")",
+    "animationType": "select_col",
+    "highlightCol": "menu",
+    "datasetTitle": "เมนูร้านชานมไข่มุกหน้าโรงเรียน",
+    "mascotTipTh": "อยากดูแค่บางคอลัมน์ให้ตารางดูโล่งขึ้น ลองกด 'รันคำสั่ง' ดูการทำงานของ select() นะ",
+    "columns": ["menu", "size", "price"],
+    "initialRows": [
+      { "id": "s1", "menu": "ชานมไต้หวัน", "size": "M", "price": 35 },
+      { "id": "s2", "menu": "โกโก้เย็น", "size": "M", "price": 40 },
+      { "id": "s3", "menu": "ชาไทยไข่มุก", "size": "L", "price": 45 }
+    ],
+    "resultRows": [
+      { "id": "s1", "menu": "ชานมไต้หวัน" },
+      { "id": "s2", "menu": "โกโก้เย็น" },
+      { "id": "s3", "menu": "ชาไทยไข่มุก" }
+    ]
+  },
+  {
+    "id": "df-with-columns",
+    "name": "df.with_columns()",
+    "type": "Method",
+    "category": "เพิ่มและแก้ไขคอลัมน์",
+    "keywords": ["with_columns", "เพิ่มคอลัมน์", "คำนวณ", "alias", "สร้างคอลัมน์"],
+    "summary": "ใช้เพิ่มคอลัมน์ใหม่ (หรือแก้ไขคอลัมน์เดิม) เข้าไปในตาราง โดยยังคงเก็บคอลัมน์เดิมทั้งหมดไว้ครบ",
+    "signature": "df.with_columns(*exprs, **named_exprs) -> DataFrame",
+    "parameters": [
+      {
+        "name": "*exprs",
+        "desc": "Expression ที่ใช้สร้างคอลัมน์ใหม่ เช่น (pl.col(\"price\") + 5).alias(\"with_pearl\")"
+      },
+      {
+        "name": "**named_exprs",
+        "desc": "ตั้งชื่อคอลัมน์ใหม่แบบสั้น เช่น with_pearl=pl.col(\"price\") + 5"
+      }
+    ],
+    "code": "import polars as pl\n\n# เพิ่มคอลัมน์ราคาเมื่อเพิ่มไข่มุก (+5 บาท)\ndf = df.with_columns(with_pearl=pl.col(\"price\") + 5)",
+    "animationType": "add_column",
+    "datasetTitle": "คำนวณราคาชานมเมื่อเพิ่มไข่มุก (+5 บาท)",
+    "mascotTipTh": "อยากเพิ่มคอลัมน์คำนวณใหม่โดยไม่ทิ้งข้อมูลเดิม กด 'รันคำสั่ง' ดูคอลัมน์ขวาสุดนะ",
+    "columns": ["menu", "price"],
+    "initialRows": [
+      { "id": "wc1", "menu": "ชานมไต้หวัน", "price": 35 },
+      { "id": "wc2", "menu": "โกโก้เย็น", "price": 40 },
+      { "id": "wc3", "menu": "ชาไทย", "price": 30 }
+    ],
+    "resultRows": [
+      { "id": "wc1", "menu": "ชานมไต้หวัน", "price": 35, "with_pearl": 40 },
+      { "id": "wc2", "menu": "โกโก้เย็น", "price": 40, "with_pearl": 45 },
+      { "id": "wc3", "menu": "ชาไทย", "price": 30, "with_pearl": 35 }
+    ]
+  },
+  {
+    "id": "df-unique",
+    "name": "df.unique()",
+    "type": "Method",
+    "category": "จัดการข้อมูลซ้ำ",
+    "keywords": ["unique", "ซ้ำ", "ลบข้อมูลซ้ำ", "deduplicate", "distinct"],
+    "summary": "ใช้ลบ \"แถวที่ซ้ำกัน\" ออกจากตาราง ให้เหลือเพียงข้อมูลที่ไม่ซ้ำกันเท่านั้น",
+    "signature": "df.unique(subset=None, *, keep=\"any\", maintain_order=False) -> DataFrame",
+    "parameters": [
+      {
+        "name": "subset",
+        "desc": "ระบุชื่อคอลัมน์ที่ใช้เช็กว่าซ้ำกันหรือไม่ (ถ้าไม่ใส่ จะเช็กทั้งแถว)"
+      },
+      {
+        "name": "keep",
+        "desc": "เลือกว่าจะเก็บแถวไหนไว้เมื่อเจอตัวซ้ำ เช่น \"first\" (ตัวแรก), \"last\" (ตัวสุดท้าย) หรือ \"any\""
+      },
+      {
+        "name": "maintain_order",
+        "desc": "กำหนดเป็น True หากต้องการรักษาลำดับแถวเดิมไว้"
+      }
+    ],
+    "code": "import polars as pl\n\n# ลบรายชื่อนักเรียนที่ลงทะเบียนซ้ำ\nunique_df = df.unique(subset=[\"name\"], keep=\"first\", maintain_order=True)",
+    "animationType": "deduplicate",
+    "datasetTitle": "รายชื่อลงทะเบียนเข้าชมรมคอมพิวเตอร์",
+    "mascotTipTh": "เห็นชื่อที่โผล่ซ้ำในตารางไหม ลองกด 'รันคำสั่ง' เพื่อให้เหลือชื่อละหนึ่งแถวดูนะ",
+    "columns": ["name", "room"],
+    "initialRows": [
+      { "id": "u1", "name": "ต้นกล้า", "room": "5/1" },
+      { "id": "u2", "name": "น้ำใส", "room": "5/2" },
+      { "id": "u3", "name": "ต้นกล้า", "room": "5/1" },
+      { "id": "u4", "name": "ภูผา", "room": "5/1" }
+    ],
+    "resultRows": [
+      { "id": "u1", "name": "ต้นกล้า", "room": "5/1" },
+      { "id": "u2", "name": "น้ำใส", "room": "5/2" },
+      { "id": "u4", "name": "ภูผา", "room": "5/1" }
+    ]
+  },
+  {
+    "id": "df-sort",
+    "name": "df.sort()",
+    "type": "Method",
+    "category": "เรียงลำดับและจัดกลุ่ม",
+    "keywords": ["sort", "เรียงลำดับ", "มากไปน้อย", "น้อยไปมาก", "order"],
+    "summary": "ใช้เรียงลำดับแถวในตารางตามค่าของคอลัมน์ที่ต้องการ เช่น เรียงคะแนนสอบจากมากไปน้อย",
+    "signature": "df.sort(by, *more_by, descending=False, nulls_last=False) -> DataFrame",
+    "parameters": [
+      {
+        "name": "by",
+        "desc": "ชื่อคอลัมน์หลักที่ต้องการใช้เรียงลำดับ เช่น \"score\""
+      },
+      {
+        "name": "descending",
+        "desc": "กำหนดเป็น True เพื่อเรียงจากมากไปน้อย (ค่าเริ่มต้น False คือเรียงจากน้อยไปมาก)"
+      },
+      {
+        "name": "nulls_last",
+        "desc": "กำหนดเป็น True เพื่อให้ค่าว่าง (null) ไปอยู่ท้ายสุด"
+      }
+    ],
+    "code": "import polars as pl\n\n# เรียงลำดับคะแนนจากมากไปน้อย\nsorted_df = df.sort(\"score\", descending=True)",
+    "animationType": "sort_rows",
+    "datasetTitle": "จัดอันดับคะแนนสอบวิชาวิทยาการคำนวณ",
+    "mascotTipTh": "ลองกด 'รันคำสั่ง' แล้วดูแถวคะแนนเลื่อนสลับตำแหน่งจากมากไปน้อยแบบนุ่มนวลเลย",
+    "columns": ["name", "score"],
+    "initialRows": [
+      { "id": "so1", "name": "น้ำใส", "score": 72 },
+      { "id": "so2", "name": "ภูผา", "score": 95 },
+      { "id": "so3", "name": "ต้นกล้า", "score": 85 }
+    ],
+    "resultRows": [
+      { "id": "so2", "name": "ภูผา", "score": 95 },
+      { "id": "so3", "name": "ต้นกล้า", "score": 85 },
+      { "id": "so1", "name": "น้ำใส", "score": 72 }
+    ]
+  },
+  {
+    "id": "df-group-by",
+    "name": "df.group_by()",
+    "type": "Method",
+    "category": "เรียงลำดับและจัดกลุ่ม",
+    "keywords": ["group_by", "จัดกลุ่ม", "สรุปผล", "agg", "ค่าเฉลี่ย", "ผลรวม"],
+    "summary": "ใช้จัดกลุ่มข้อมูลที่เหมือนกันเข้าด้วยกัน แล้วคำนวณสรุปผลต่อท้ายด้วย .agg() เช่น หาคะแนนเฉลี่ยแยกตามห้องเรียน",
+    "signature": "df.group_by(*by, maintain_order=False, **named_by) -> GroupBy",
+    "parameters": [
+      {
+        "name": "*by",
+        "desc": "ชื่อคอลัมน์ที่ใช้เป็นเกณฑ์ในการจัดกลุ่ม เช่น \"room\""
+      },
+      {
+        "name": "maintain_order",
+        "desc": "กำหนดเป็น True เพื่อรักษาลำดับกลุ่มตามที่ปรากฏในตารางเดิม"
+      }
+    ],
+    "code": "import polars as pl\n\n# หาคะแนนเฉลี่ยของแต่ละห้องเรียน\nsummary_df = df.group_by(\"room\").agg(pl.col(\"score\").mean())",
+    "animationType": "transform_values",
+    "datasetTitle": "สรุปคะแนนเฉลี่ยแยกตามห้องเรียน",
+    "mascotTipTh": "group_by() จะรวมคนห้องเดียวกันมาหาค่าเฉลี่ย ลองกด 'รันคำสั่ง' ดูผลสรุปได้เลย",
+    "columns": ["room", "score"],
+    "initialRows": [
+      { "id": "g1", "room": "5/1", "score": 80 },
+      { "id": "g2", "room": "5/1", "score": 90 },
+      { "id": "g3", "room": "5/2", "score": 75 },
+      { "id": "g4", "room": "5/2", "score": 85 }
+    ],
+    "resultRows": [
+      { "id": "g1", "room": "5/1", "score": 85 },
+      { "id": "g3", "room": "5/2", "score": 80 }
+    ]
+  },
+  {
+    "id": "str-to-date",
+    "name": ".str.to_date()",
+    "type": "Expression",
+    "category": "แปลงชนิดข้อมูล",
+    "keywords": ["to_date", "date", "วันที่", "ข้อความ", "str", "parse"],
+    "summary": "ใช้แปลงข้อความ (String) ที่เขียนเป็นวันที่ เช่น \"2026-11-22\" ให้กลายเป็นชนิดข้อมูล Date ของ Polars",
+    "signature": "Expr.str.to_date(format=None, *, strict=True) -> Expr",
+    "parameters": [
+      {
+        "name": "format",
+        "desc": "รูปแบบของวันที่ในข้อความ เช่น \"%Y-%m-%d\" หรือ \"%d/%m/%Y\""
+      },
+      {
+        "name": "strict",
+        "desc": "ถ้าเป็น True จะแจ้ง error ทันทีเมื่อเจอรูปแบบวันที่ไม่ตรง (ถ้า False จะเปลี่ยนเป็น null แทน)"
+      }
+    ],
+    "code": "import polars as pl\n\n# แปลงข้อความวันที่ให้เป็นชนิดข้อมูล Date\ndf = df.with_columns(pl.col(\"exam_date\").str.to_date(\"%d/%m/%Y\"))",
+    "animationType": "transform_values",
+    "datasetTitle": "แปลงรูปแบบวันสอบในตาราง",
+    "mascotTipTh": "อยากเปลี่ยนข้อความวันสอบให้เป็นวันที่มาตรฐาน กด 'รันคำสั่ง' ดูความเปลี่ยนแปลงนะ",
+    "columns": ["subject", "exam_date"],
+    "initialRows": [
+      { "id": "d1", "subject": "คณิตศาสตร์", "exam_date": "22/11/2026" },
+      { "id": "d2", "subject": "วิทยาการคำนวณ", "exam_date": "24/11/2026" }
+    ],
+    "resultRows": [
+      { "id": "d1", "subject": "คณิตศาสตร์", "exam_date": "2026-11-22" },
+      { "id": "d2", "subject": "วิทยาการคำนวณ", "exam_date": "2026-11-24" }
+    ]
+  },
+  {
+    "id": "pl-coalesce",
+    "name": "pl.coalesce()",
+    "type": "Expression",
+    "category": "จัดการค่าว่าง",
+    "keywords": ["coalesce", "null", "ค่าว่าง", "แทนที่", "สำรอง", "fallback"],
+    "summary": "ใช้เลือกค่าแรกที่ \"ไม่ใช่ค่าว่าง (null)\" จากรายการคอลัมน์หรือค่าสำรองที่เรียงลำดับไว้",
+    "signature": "pl.coalesce(*exprs) -> Expr",
+    "parameters": [
+      {
+        "name": "*exprs",
+        "desc": "ลำดับคอลัมน์หรือค่าสำรองที่ต้องการให้ Polars ไล่เช็กจากซ้ายไปขวา"
+      }
+    ],
+    "code": "import polars as pl\n\n# ถ้าคอลัมน์ nickname ว่าง ให้ใช้ first_name แทน\ndf = df.with_columns(display=pl.coalesce(\"nickname\", \"first_name\"))",
+    "animationType": "transform_values",
+    "datasetTitle": "เลือกชื่อแสดงผล (ชื่อเล่น หรือ ชื่อจริง)",
+    "mascotTipTh": "ถ้าชื่อเล่นว่างอยู่ coalesce() จะหยิบชื่อจริงมาช่วยเติมให้ กด 'รันคำสั่ง' ลองดูเลย",
+    "columns": ["first_name", "nickname"],
+    "initialRows": [
+      { "id": "co1", "first_name": "ธนกฤต", "nickname": "ต้นกล้า" },
+      { "id": "co2", "first_name": "วริศรา", "nickname": null },
+      { "id": "co3", "first_name": "ภูมิพัฒน์", "nickname": "ภูผา" }
+    ],
+    "resultRows": [
+      { "id": "co1", "first_name": "ธนกฤต", "nickname": "ต้นกล้า" },
+      { "id": "co2", "first_name": "วริศรา", "nickname": "วริศรา" },
+      { "id": "co3", "first_name": "ภูมิพัฒน์", "nickname": "ภูผา" }
+    ]
+  },
+  {
+    "id": "df-head",
+    "name": "df.head()",
+    "type": "Method",
+    "category": "สำรวจข้อมูลเบื้องต้น",
+    "keywords": ["head", "ตัวอย่าง", "แถวแรก", "preview", "ดูข้อมูล"],
+    "summary": "ใช้ขอดูข้อมูลเฉพาะ \"แถวแรกๆ\" ของตาราง (ค่าเริ่มต้น 5 แถว) เหมาะสำหรับเช็กหน้าตาข้อมูลเบื้องต้น",
+    "signature": "df.head(n=5) -> DataFrame",
+    "parameters": [
+      {
+        "name": "n",
+        "desc": "จำนวนแถวแรกที่ต้องการดู (ค่าเริ่มต้นคือ 5 แถว)"
+      }
+    ],
+    "code": "import polars as pl\n\n# ขอดูข้อมูล 2 แถวแรกของตาราง\ntop_df = df.head(2)",
+    "animationType": "filter_rows",
+    "datasetTitle": "ตารางคะแนนสอบวิชาวิทยาการคำนวณ",
+    "mascotTipTh": "ตารางใหญ่แค่ไหนก็แอบดูหัวตารางก่อนได้ด้วย head() ลองกด 'รันคำสั่ง' ดู 2 แถวแรกสิ",
+    "columns": ["name", "room", "score"],
+    "initialRows": [
+      { "id": "h1", "name": "ต้นกล้า", "room": "5/1", "score": 85 },
+      { "id": "h2", "name": "น้ำใส", "room": "5/1", "score": 92 },
+      { "id": "h3", "name": "ภูผา", "room": "5/2", "score": 78 },
+      { "id": "h4", "name": "ข้าวหอม", "room": "5/2", "score": 88 }
+    ],
+    "resultRows": [
+      { "id": "h1", "name": "ต้นกล้า", "room": "5/1", "score": 85 },
+      { "id": "h2", "name": "น้ำใส", "room": "5/1", "score": 92 }
+    ]
+  },
+  {
+    "id": "df-describe",
+    "name": "df.describe()",
+    "type": "Method",
+    "category": "สำรวจข้อมูลเบื้องต้น",
+    "keywords": ["describe", "สถิติ", "ค่าเฉลี่ย", "min", "max", "summary"],
+    "summary": "ใช้สรุปค่าสถิติพื้นฐานของทุกคอลัมน์ในตาราง เช่น จำนวนข้อมูล ค่าเฉลี่ย ค่าต่ำสุด และค่าสูงสุด ในคำสั่งเดียว",
+    "signature": "df.describe(percentiles=(0.25, 0.50, 0.75)) -> DataFrame",
+    "parameters": [
+      {
+        "name": "percentiles",
+        "desc": "เปอร์เซ็นไทล์ที่ต้องการให้คำนวณเพิ่มเติม (ค่าเริ่มต้นคือ 25%, 50%, 75%)"
+      }
+    ],
+    "code": "import polars as pl\n\n# สรุปค่าสถิติพื้นฐานของตารางคะแนน\nstats_df = df.describe()",
+    "animationType": "transform_values",
+    "datasetTitle": "สรุปค่าสถิติคะแนนสอบ ม.5",
+    "mascotTipTh": "คำสั่งเดียวได้ทั้งค่าเฉลี่ย ต่ำสุด และสูงสุด กด 'รันคำสั่ง' ดูตารางสถิติได้เลย",
+    "columns": ["statistic", "score"],
+    "initialRows": [
+      { "id": "ds1", "statistic": "ต้นกล้า", "score": 80 },
+      { "id": "ds2", "statistic": "น้ำใส", "score": 90 },
+      { "id": "ds3", "statistic": "ภูผา", "score": 70 }
+    ],
+    "resultRows": [
+      { "id": "ds1", "statistic": "mean", "score": 80 },
+      { "id": "ds2", "statistic": "min", "score": 70 },
+      { "id": "ds3", "statistic": "max", "score": 90 }
+    ]
+  },
+  {
+    "id": "df-fill-null",
+    "name": "df.fill_null()",
+    "type": "Method",
+    "category": "จัดการค่าว่าง",
+    "keywords": ["fill_null", "null", "ค่าว่าง", "เติมค่า", "แทนที่"],
+    "summary": "ใช้เติมค่าที่กำหนดลงในช่องที่เป็นค่าว่าง (null) แทนการลบทิ้ง ช่วยรักษาข้อมูลแถวอื่นๆ ไว้",
+    "signature": "df.fill_null(value=None, strategy=None, limit=None) -> DataFrame",
+    "parameters": [
+      {
+        "name": "value",
+        "desc": "ค่าที่ต้องการนำไปเติมแทนที่ null เช่น 0 หรือ \"ไม่ระบุ\""
+      },
+      {
+        "name": "strategy",
+        "desc": "วิธีเติมอัตโนมัติ เช่น \"forward\" (ใช้ค่าจากแถวก่อนหน้า) หรือ \"mean\" (ใช้ค่าเฉลี่ย)"
+      }
+    ],
+    "code": "import polars as pl\n\n# เติม 0 แทนค่าว่างในตารางคะแนน\nclean_df = df.fill_null(0)",
+    "animationType": "transform_values",
+    "datasetTitle": "เติมคะแนน 0 ให้คนที่ขาดสอบ (null)",
+    "mascotTipTh": "ไม่อยากลบแถวทิ้ง แต่อยากเติมเลข 0 แทนค่า null ลองกด 'รันคำสั่ง' ดูนะ",
+    "columns": ["name", "score"],
+    "initialRows": [
+      { "id": "fn1", "name": "ต้นกล้า", "score": 85 },
+      { "id": "fn2", "name": "น้ำใส", "score": null },
+      { "id": "fn3", "name": "ภูผา", "score": 91 }
+    ],
+    "resultRows": [
+      { "id": "fn1", "name": "ต้นกล้า", "score": 85 },
+      { "id": "fn2", "name": "น้ำใส", "score": 0 },
+      { "id": "fn3", "name": "ภูผา", "score": 91 }
+    ]
+  },
+  {
+    "id": "df-join",
+    "name": "df.join()",
+    "type": "Method",
+    "category": "รวมตาราง",
+    "keywords": ["join", "รวมตาราง", "เชื่อมตาราง", "merge", "on"],
+    "summary": "ใช้เชื่อมข้อมูลจาก 2 ตารางเข้าด้วยกัน โดยจับคู่จากคอลัมน์ที่มีค่าตรงกัน เช่น เชื่อมตารางรายชื่อกับตารางคะแนนสอบ",
+    "signature": "df.join(other, on=None, how=\"inner\") -> DataFrame",
+    "parameters": [
+      {
+        "name": "other",
+        "desc": "ตาราง DataFrame อีกอันที่ต้องการนำมาเชื่อมด้วย"
+      },
+      {
+        "name": "on",
+        "desc": "ชื่อคอลัมน์ที่ใช้เป็นตัวเชื่อมระหว่าง 2 ตาราง เช่น \"student_id\""
+      },
+      {
+        "name": "how",
+        "desc": "รูปแบบการเชื่อม เช่น \"inner\" (เอาเฉพาะที่ตรงกันทั้งคู่) หรือ \"left\" (ยึดตารางซ้ายเป็นหลัก)"
+      }
+    ],
+    "code": "import polars as pl\n\n# เชื่อมตารางนักเรียนกับตารางคะแนนด้วยคอลัมน์ name\nmerged_df = students_df.join(scores_df, on=\"name\", how=\"inner\")",
+    "animationType": "add_column",
+    "datasetTitle": "เชื่อมตารางนักเรียนกับคะแนนสอบ",
+    "mascotTipTh": "join() จะจับคู่ชื่อนักเรียนแล้วดึงคอลัมน์คะแนนมาต่อข้างๆ ให้เลย ลองกด 'รันคำสั่ง' สิ",
+    "columns": ["name", "room"],
+    "initialRows": [
+      { "id": "j1", "name": "ต้นกล้า", "room": "5/1" },
+      { "id": "j2", "name": "น้ำใส", "room": "5/1" }
+    ],
+    "resultRows": [
+      { "id": "j1", "name": "ต้นกล้า", "room": "5/1", "score": 85 },
+      { "id": "j2", "name": "น้ำใส", "room": "5/1", "score": 92 }
+    ]
+  },
+  {
+    "id": "pl-concat",
+    "name": "pl.concat()",
+    "type": "Function",
+    "category": "รวมตาราง",
+    "keywords": ["concat", "ต่อตาราง", "รวมแถว", "append", "vertical"],
+    "summary": "ใช้นำตารางหลายๆ อันที่มีคอลัมน์เหมือนกันมาต่อเรียงกันในแนวตั้ง (หรือแนวนอน)",
+    "signature": "pl.concat(items, *, how=\"vertical\", rechunk=False) -> DataFrame",
+    "parameters": [
+      {
+        "name": "items",
+        "desc": "รายการของ DataFrame ที่ต้องการนำมาต่อกัน เช่น [df_room1, df_room2]"
+      },
+      {
+        "name": "how",
+        "desc": "ทิศทางการต่อตาราง ค่าเริ่มต้น \"vertical\" คือต่อแถวลงมาด้านล่าง"
+      }
+    ],
+    "code": "import polars as pl\n\n# รวมตารางคะแนนของห้อง 5/1 และ 5/2 เข้าด้วยกัน\nall_df = pl.concat([df_room1, df_room2])",
+    "animationType": "transform_values",
+    "datasetTitle": "รวมรายชื่อห้อง 5/1 และ 5/2",
+    "mascotTipTh": "มีตารางหลายห้องที่หัวคอลัมน์เหมือนกัน กด 'รันคำสั่ง' ดูการต่อแถวรวมกันได้เลย",
+    "columns": ["name", "room"],
+    "initialRows": [
+      { "id": "cc1", "name": "ต้นกล้า", "room": "5/1" },
+      { "id": "cc2", "name": "น้ำใส", "room": "5/1" }
+    ],
+    "resultRows": [
+      { "id": "cc1", "name": "ต้นกล้า", "room": "5/1" },
+      { "id": "cc2", "name": "น้ำใส", "room": "5/1" },
+      { "id": "cc3", "name": "ภูผา", "room": "5/2" }
+    ]
+  },
+  {
+    "id": "pl-when",
+    "name": "pl.when()",
+    "type": "Expression",
+    "category": "เงื่อนไข",
+    "keywords": ["when", "then", "otherwise", "if", "else", "เงื่อนไข", "ตัดเกรด"],
+    "summary": "ใช้สร้างเงื่อนไขแบบ if-else ใน Polars เพื่อกำหนดค่าใหม่ตามเงื่อนไขที่ตั้งไว้ เช่น ตัดเกรด ผ่าน/ไม่ผ่าน",
+    "signature": "pl.when(*predicates).then(expr).otherwise(expr) -> Expr",
+    "parameters": [
+      {
+        "name": "*predicates",
+        "desc": "เงื่อนไขที่ต้องการตรวจสอบ เช่น pl.col(\"score\") >= 80"
+      },
+      {
+        "name": ".then()",
+        "desc": "ค่าที่ต้องการให้แสดงเมื่อเงื่อนไขเป็นจริง"
+      },
+      {
+        "name": ".otherwise()",
+        "desc": "ค่าที่ต้องการให้แสดงเมื่อเงื่อนไขเป็นเท็จ"
+      }
+    ],
+    "code": "import polars as pl\n\n# สร้างคอลัมน์ status เพื่อบอกว่าผ่านหรือไม่ผ่าน\ndf = df.with_columns(\n    pl.when(pl.col(\"score\") >= 80)\n    .then(pl.lit(\"ผ่าน\"))\n    .otherwise(pl.lit(\"ไม่ผ่าน\"))\n    .alias(\"status\")\n)",
+    "animationType": "add_column",
+    "datasetTitle": "ตัดเกรดผ่าน/ไม่ผ่าน (เกณฑ์ 80 คะแนน)",
+    "mascotTipTh": "เหมือน if-else ใน Python เลยนะ กด 'รันคำสั่ง' ดูการตัดผลผ่าน/ไม่ผ่านกัน",
+    "columns": ["name", "score"],
+    "initialRows": [
+      { "id": "w1", "name": "ต้นกล้า", "score": 85 },
+      { "id": "w2", "name": "น้ำใส", "score": 62 },
+      { "id": "w3", "name": "ภูผา", "score": 91 }
+    ],
+    "resultRows": [
+      { "id": "w1", "name": "ต้นกล้า", "score": 85, "status": "ผ่าน" },
+      { "id": "w2", "name": "น้ำใส", "score": 62, "status": "ไม่ผ่าน" },
+      { "id": "w3", "name": "ภูผา", "score": 91, "status": "ผ่าน" }
+    ]
+  },
+  {
+    "id": "expr-cast",
+    "name": ".cast()",
+    "type": "Expression",
+    "category": "แปลงชนิดข้อมูล",
+    "keywords": ["cast", "แปลงชนิด", "dtype", "int", "float", "str", "type"],
+    "summary": "ใช้แปลงชนิดข้อมูล (Data Type) ของคอลัมน์ เช่น แปลงข้อความ \"85\" ให้เป็นตัวเลขจำนวนเต็ม pl.Int64 เพื่อนำไปคำนวณต่อ",
+    "signature": "Expr.cast(dtype, *, strict=True) -> Expr",
+    "parameters": [
+      {
+        "name": "dtype",
+        "desc": "ชนิดข้อมูลปลายทาง เช่น pl.Int64 (จำนวนเต็ม), pl.Float64 (ทศนิยม), pl.String (ข้อความ)"
+      },
+      {
+        "name": "strict",
+        "desc": "ถ้าเป็น True จะแจ้ง error หากแปลงค่าไม่ได้ (ถ้า False จะเปลี่ยนเป็น null แทน)"
+      }
+    ],
+    "code": "import polars as pl\n\n# แปลงคอลัมน์ score จากทศนิยมเป็นจำนวนเต็ม\ndf = df.with_columns(pl.col(\"score\").cast(pl.Int64))",
+    "animationType": "transform_values",
+    "datasetTitle": "แปลงคะแนนทศนิยมเป็นจำนวนเต็ม",
+    "mascotTipTh": "ถ้าข้อมูลเป็นข้อความหรือทศนิยมแล้วอยากเปลี่ยนเป็นจำนวนเต็ม กด 'รันคำสั่ง' ดู .cast() ได้เลย",
+    "columns": ["name", "score"],
+    "initialRows": [
+      { "id": "ca1", "name": "ต้นกล้า", "score": "85.0" },
+      { "id": "ca2", "name": "น้ำใส", "score": "92.0" }
+    ],
+    "resultRows": [
+      { "id": "ca1", "name": "ต้นกล้า", "score": 85 },
+      { "id": "ca2", "name": "น้ำใส", "score": 92 }
+    ]
+  }
+]
